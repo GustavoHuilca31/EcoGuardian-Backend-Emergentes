@@ -20,12 +20,12 @@ public static class InterfaceDependencyContainer
 
             var auth0Settings = builder.Configuration.GetSection("Auth0").Get<Auth0Settings>();
 
-            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
             {
                 Type = SecuritySchemeType.OAuth2,
                 Flows = new OpenApiOAuthFlows
                 {
-                    Implicit = new OpenApiOAuthFlow
+                    AuthorizationCode = new OpenApiOAuthFlow
                     {
                         AuthorizationUrl = new Uri($"https://{auth0Settings!.Domain}/authorize"),
                         TokenUrl = new Uri($"https://{auth0Settings.Domain}/oauth/token"),
@@ -33,15 +33,10 @@ public static class InterfaceDependencyContainer
                         {
                             { "openid", "OpenID" },
                             { "profile", "Profile" },
-                            { "email", "Email" },
-                            { "read:metrics", "Read Metrics" },
-                            { "write:metrics", "Write Metrics" }
+                            { "email", "Email" }
                         }
                     }
-                },
-                In = ParameterLocation.Header,
-                Scheme = "bearer",
-                BearerFormat = "JWT"
+                }
             });
 
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -52,10 +47,10 @@ public static class InterfaceDependencyContainer
                         Reference = new OpenApiReference
                         {
                             Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
+                            Id = "oauth2"
                         }
                     },
-                    Array.Empty<string>()
+                    new[] { "openid", "profile", "email" }
                 }
             });
         });

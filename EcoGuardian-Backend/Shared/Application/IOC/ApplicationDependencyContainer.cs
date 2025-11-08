@@ -90,8 +90,6 @@ public static class ApplicationDependencyContainer
         services.AddScoped<IRoleCommandService, RoleCommandService>();
         services.AddScoped<IUserCommandService, UserCommandService>();
         services.AddScoped<IUserQueryService, UserQueryService>();
-        services.AddScoped<ITokenService, TokenService>();
-        services.AddScoped<IHashingService, HashingService>();
         services.AddScoped<IIamContextFacade, IamContextFacade>();
         services.AddScoped<IMonitorinContextFacade, MonitorinContextFacade>();
         services.AddScoped<IExternalUserService, ExternalUserService>();
