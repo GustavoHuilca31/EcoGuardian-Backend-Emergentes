@@ -6,4 +6,5 @@ namespace EcoGuardian_Backend.IAM.Domain.Services;
 public interface IUserQueryService
 {
     Task<User?> Handle(GetUserByIdQuery query);
+    Task<User?> Handle(GetUserByAuth0UserIdQuery query);
 }

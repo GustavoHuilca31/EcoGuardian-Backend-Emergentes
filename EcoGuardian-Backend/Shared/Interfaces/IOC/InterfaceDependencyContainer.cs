@@ -1,4 +1,4 @@
-using EcoGuardian_Backend.IAM.Infrastructure.Tokens.JWT.Configuration;
+using EcoGuardian_Backend.IAM.Infrastructure.Auth0.Configuration;
 using EcoGuardian_Backend.Shared.Application.Helper;
 using EcoGuardian_Backend.Shared.Interfaces.ASP.Configuration;
 using Microsoft.AspNetCore.Authorization;
@@ -17,13 +17,33 @@ public static class InterfaceDependencyContainer
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "EcoGuardian API", Version = "v1" });
             c.OperationFilter<FileUploadOperationFilter>();
+
+            var auth0Settings = builder.Configuration.GetSection("Auth0").Get<Auth0Settings>();
+
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
+                Type = SecuritySchemeType.OAuth2,
+                Flows = new OpenApiOAuthFlows
+                {
+                    Implicit = new OpenApiOAuthFlow
+                    {
+                        AuthorizationUrl = new Uri($"https://{auth0Settings!.Domain}/authorize"),
+                        TokenUrl = new Uri($"https://{auth0Settings.Domain}/oauth/token"),
+                        Scopes = new Dictionary<string, string>
+                        {
+                            { "openid", "OpenID" },
+                            { "profile", "Profile" },
+                            { "email", "Email" },
+                            { "read:metrics", "Read Metrics" },
+                            { "write:metrics", "Write Metrics" }
+                        }
+                    }
+                },
                 In = ParameterLocation.Header,
-                Description = "Please enter a valid token",
-                Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey
+                Scheme = "bearer",
+                BearerFormat = "JWT"
             });
+
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
@@ -39,7 +59,7 @@ public static class InterfaceDependencyContainer
                 }
             });
         });
-        builder.Services.Configure<TokenSettings>(builder.Configuration.GetSection("TokenSettings"));
+        builder.Services.Configure<Auth0Settings>(builder.Configuration.GetSection("Auth0"));
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowAllOrigins", corsBuilder =>

@@ -27,7 +27,11 @@ public class UserRepository (AppDbContext context) : BaseRepository<User>(contex
     {
         return await context.Set<User>().FirstOrDefaultAsync(user => user.Email == email);
     }
-    
+
+    public async Task<User?> FindByAuth0UserIdAsync(string auth0UserId)
+    {
+        return await context.Set<User>().FirstOrDefaultAsync(user => user.Auth0UserId == auth0UserId);
+    }
 
     public bool ExistsById(int userId)
     {

@@ -6,6 +6,8 @@ namespace EcoGuardian_Backend.IAM.Domain.Respositories;
 public interface IUserRepository : IBaseRepository<User>
 {
     Task<User?> FindByEmailAsync (string email);
-    
+
+    Task<User?> FindByAuth0UserIdAsync(string auth0UserId);
+
     bool ExistsById(int userId);
 }

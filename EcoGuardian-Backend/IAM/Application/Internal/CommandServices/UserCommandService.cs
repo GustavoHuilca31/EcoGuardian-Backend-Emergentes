@@ -11,6 +11,7 @@ public class UserCommandService(
     IUserRepository userRepository,
     ITokenService tokenService,
     IHashingService hashingService,
+    IUserRoleRepository userRoleRepository,
     IUnitOfWork unitOfWork)
     : IUserCommandService
 {
@@ -71,5 +72,30 @@ public class UserCommandService(
         {
             throw new Exception($"An error occurred while updating user role: {e.Message}");
         }
+    }
+
+    public async Task<User> Handle(SyncUserFromAuth0Command command)
+    {
+        var existingUser = await userRepository.FindByAuth0UserIdAsync(command.Auth0UserId);
+        if (existingUser != null)
+            return existingUser;
+
+        var role = await userRoleRepository.FindByRoleNameAsync(command.Role);
+        if (role == null)
+            throw new Exception($"Role {command.Role} not found");
+
+        var user = new User(command.Email, role.Id, command.Auth0UserId);
+
+        try
+        {
+            await userRepository.AddAsync(user);
+            await unitOfWork.CompleteAsync();
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"An error occurred while syncing user from Auth0: {e.Message}");
+        }
+
+        return user;
     }
 }

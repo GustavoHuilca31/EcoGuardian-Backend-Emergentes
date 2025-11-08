@@ -8,5 +8,5 @@ public interface IUserCommandService
     Task<(User user, string token)> Handle(SignInCommand command);
     Task<User?> Handle(SignUpCommand command);
     Task Handle(UpdateRoleCommand command);
-    
+    Task<User> Handle(SyncUserFromAuth0Command command);
 }

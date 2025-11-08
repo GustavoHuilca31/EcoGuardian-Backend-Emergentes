@@ -8,10 +8,12 @@ public class User
     public int Id { get; }
 
     public string Email { get; private set; }
-    
+
     public string Password { get; private set; }
 
     public int RoleId { get; private set; }
+
+    public string? Auth0UserId { get; private set; }
 
     public User()
     {
@@ -26,9 +28,15 @@ public class User
         Email = command.Email;
         Password = command.Password;
         RoleId = command.RoleId;
-
     }
-    
+
+    public User(string email, int roleId, string auth0UserId)
+    {
+        Email = email;
+        Password = string.Empty;
+        RoleId = roleId;
+        Auth0UserId = auth0UserId;
+    }
 
     public void UpdateRoleId(int roleId)
     {
@@ -39,6 +47,9 @@ public class User
     {
         Password = password;
     }
-    
-    
+
+    public void SetAuth0UserId(string auth0UserId)
+    {
+        Auth0UserId = auth0UserId;
+    }
 }
