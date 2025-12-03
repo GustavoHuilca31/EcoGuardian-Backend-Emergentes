@@ -8,7 +8,7 @@ using EcoGuardian_Backend.CRM.Interfaces.Rest.Resources;
 
 namespace EcoGuardian_Backend.CRM.Interfaces.Rest.Transform
 {    public class QuestionResourceFromEntityAssembler
-    {        public static QuestionResource ToResourceFromEntity(Question question)
+    {        public static QuestionResource ToResourceFromEntity(Question question, string answer)
         {
             Console.WriteLine("Objeto Pregunta." + question + "Imagenes" + question.Images);
 
@@ -24,6 +24,7 @@ namespace EcoGuardian_Backend.CRM.Interfaces.Rest.Transform
                 UserId = question.UserId,
                 UpdatedAt = question.UpdatedAt ?? DateTime.UtcNow,
                 PlantId = question.PlantId,
+                Answer = answer,
                 ImageUrls = question.Images?.Select(img => img.ImageUrl).ToList()
             };
         }

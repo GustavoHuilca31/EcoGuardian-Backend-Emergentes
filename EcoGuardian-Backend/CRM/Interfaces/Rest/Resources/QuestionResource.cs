@@ -16,6 +16,8 @@ namespace EcoGuardian_Backend.CRM.Interfaces.Rest.Resources
         public DateTime UpdatedAt { get; set; }
         public int PlantId { get; set; }
         public int UserId { get; set; }
+        
+        public string Answer { get; set; }
         public List<string>? ImageUrls { get; set; }  // URLs de las imágenes de la pregunta
 
         // For future Sprints This should also return some of the plant's data like the statistics in order for a better assessment of the question        
