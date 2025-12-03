@@ -22,7 +22,6 @@ public class AnswerCommandService(
 {
     public async Task Handle(RegisterAnswerCommand command)
     {
-        var userId = await externalUserService.CheckUserExists(command.SpecialistId);
         var question = await questionRepository.GetByIdAsync(command.QuestionId);
         if (question == null)
         {
@@ -35,7 +34,7 @@ public class AnswerCommandService(
         var answer = new Answer(
             command.QuestionId,
             answerContent,
-            userId
+            1
         );
         cache.Set(
             command.QuestionId,

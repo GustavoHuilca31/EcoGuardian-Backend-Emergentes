@@ -28,7 +28,11 @@ namespace EcoGuardian_Backend.CRM.Interfaces.Rest
        public async Task<IActionResult> RegisterQuestion([FromForm] RegisterQuestionCommand command)
        {
            var question = await questionCommandService.Handle(command);
-           var questionResource = QuestionResourceFromEntityAssembler.ToResourceFromEntity(question, string.Empty);
+           var createAnswerCommand = new RegisterAnswerCommand(question.Id,"nekolas");
+           await answerCommandService.Handle(createAnswerCommand);
+           var answer = await answerQueryService.GetAnswerByQuestionId(question.Id);
+           var answerContent = answer?.Content ?? string.Empty;
+           var questionResource = QuestionResourceFromEntityAssembler.ToResourceFromEntity(question, answerContent);
            return Ok(questionResource);
        }
        

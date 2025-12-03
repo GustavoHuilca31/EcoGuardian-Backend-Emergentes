@@ -10,7 +10,13 @@ using EcoGuardian_Backend.Shared.Domain.Repositories;
 
 namespace EcoGuardian_Backend.CRM.Application.Internal.CommandServices;
 
-public class QuestionCommandService(IQuestionRepository questionRepository, IUnitOfWork unitOfWork, IExternalUserServiceCRM externalUserService, ICloudinaryStorage cloudinaryStorage, Microsoft.Extensions.Logging.ILogger<QuestionCommandService> logger) : IQuestionCommandService
+public class QuestionCommandService(
+    IQuestionRepository questionRepository, 
+    IUnitOfWork unitOfWork, 
+    IExternalUserServiceCRM externalUserService, 
+    ICloudinaryStorage cloudinaryStorage,
+    ILogger<QuestionCommandService> logger
+    ) : IQuestionCommandService
 {
     public async Task<Question> Handle(RegisterQuestionCommand command)
     {
